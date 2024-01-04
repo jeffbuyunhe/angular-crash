@@ -1,5 +1,6 @@
 <h1 [countUp]="gameMultiplier" [options]="countUpOptions"></h1>
-<div style="display: block;" *ngIf="isBrowser">
-    <canvas baseChart width="400" height="400" [type]="'line'" [data]="lineChartData" [options]="lineChartOptions">
+<div *ngIf="isBrowser">
+    <canvas baseChart width="800" height="400" [type]="'line'" [data]="lineChartData" [options]="lineChartOptions">
     </canvas>
 </div>
+<button (click)="incrementGameTick()">Test Button</button>

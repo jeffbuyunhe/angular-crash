@@ -7,6 +7,8 @@ import { ChartConfiguration, ChartOptions } from 'chart.js';
 /* Temporary service for game logic until backend portion is started */
 export class GameLogicService {
 
+  crashed: boolean;
+
   gameTick: number;
 
   gameMultiplier: number;
@@ -37,6 +39,7 @@ export class GameLogicService {
   };
 
   constructor() {
+    this.crashed = false;
     this.gameTick = 0;
     this.gameMultiplier = this.setGameMultiplier();
     this.updateChartData();
@@ -51,6 +54,7 @@ export class GameLogicService {
   setGameMultiplier(): number {
     let instantCrash: number = Math.floor(Math.random() * 50) + 1
     if (instantCrash == 1) {
+      this.crashed = true;
       return 1;
     }
     return <number><unknown>Math.min(1 / Math.random(), 5000).toFixed(2);
@@ -74,7 +78,13 @@ export class GameLogicService {
 
   /* Adds data to chart based off of game tick */
   updateChartData() {
-    this.labels.push(this.gameTick);
-    this.datasets[0].data.push(1.0024 * Math.pow(1.0718, this.gameTick));
+    if (!this.crashed) {
+      const yValue = 1.0024 * Math.pow(1.0718, this.gameTick);
+      this.labels.push(this.gameTick);
+      this.datasets[0].data.push(yValue);
+      if (yValue > this.gameMultiplier) {
+        this.crashed = true;
+      }
+    }
   }
 }
